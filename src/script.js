@@ -23,11 +23,12 @@ function xpath(query, node) {
     if(rawResult === null) { break; }
 
     var thisResult = {};
+
     thisResult[rawResult.tagName] = rawResult.textContent;
-    console.log(rawResult.attributes);
-    // rawResult.attributes.forEach(function(attr) {
-    //   thisResult[attr.name] = attr.value;
-    // });
+
+    for(var i=0; i<rawResult.attributes.length; i++) {
+      thisResult['@'+rawResult.attributes.item(i).nodeName] = rawResult.attributes.item(i).nodeValue;
+    }
 
     results.push(thisResult);
   }
@@ -41,19 +42,18 @@ $(document).ready(function() {
     $.get({
       url: 'src/books.xml',
       dataType: 'text'
+
     }, function(xmlString) {
       $('#xml').text(xmlString);
-      xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
-      // console.log(xmlDoc);
-      // xmlDoc = $.parseXML(xmlString);
-      // console.log(xmlDoc);
+      // xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
+      xmlDoc = $.parseXML(xmlString);
     });
   });
 
   $('#search-button').on('click', function() {
     var titles = xpath('//title', xmlDoc);
-
-    console.log(titles);
+    // console.log(titles);
+    $('#json').text(JSON.stringify(titles, null, 2));
   });
 
 });
