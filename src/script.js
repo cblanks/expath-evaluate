@@ -1,8 +1,11 @@
 var xmlDoc = null,
+  jsonDoc = null,
+  nTrials = 100000,
   stats = {
     xpath: [],
     element: [],
-    jq: []
+    jq: [],
+    jsonpath: []
   };
 
 function nsResolver(prefix) {
@@ -62,7 +65,7 @@ function getElement(target, node) {
 
 function getElementJQ(target, node) {
   var rawResult = $(node).find(target);
-  // console.log(rawResult);
+
   var results = [];
   for(var i=0; i<rawResult.length; i++) {
     var thisResult = {};
@@ -79,67 +82,129 @@ function getElementJQ(target, node) {
   return results;
 }
 
-$(document).ready(function() {
 
+function getElementJQ(target, node) {
+  var rawResult = $(node).find(target);
+
+  var results = [];
+  for(var i=0; i<rawResult.length; i++) {
+    var thisResult = {};
+
+    thisResult[rawResult[i].tagName] = rawResult[i].textContent;
+
+    for(var j=0; j<rawResult[i].attributes.length; j++) {
+      thisResult['@'+rawResult[i].attributes[j].nodeName] = rawResult[i].attributes[j].nodeValue;
+    }
+
+    results.push(thisResult);
+  }
+
+  return results;
+}
+
+function getElementJP(target, data) {
+  var rawResult = jsonpath.query(data, `$..${target}`);
+
+  var results = [];
+  for(var i=0; i<rawResult.length; i++) {
+    var thisResult = {};
+
+    thisResult[target] = rawResult[i]['_text'];
+    const attributes = Object.keys(rawResult[i]['_attributes']);
+
+    for(var j=0; j<attributes.length; j++) {
+      thisResult[`@${attributes[j]}`] = rawResult[i]['_attributes'][attributes[j]];
+    }
+
+    results.push(thisResult);
+  }
+
+  return results;
+}
+
+function loadJson() {
+  $.get({
+    url: 'src/books.json',
+    dataType: 'text'
+
+  }, jsonString => {
+    $('#data').text(jsonString);
+    jsonDoc = JSON.parse(jsonString);
+  });
+}
+
+function loadXml() {
+  $.get({
+    url: 'src/books.xml',
+    dataType: 'text'
+
+  }, xmlString => {
+    $('#data').text(xmlString);
+    // xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
+    xmlDoc = $.parseXML(xmlString);
+  });
+}
+
+function searchByXPath() {
+  var start = ( new Date() ).getTime(),
+    titles;
+
+  for(var i=0; i<nTrials; i++) {
+    titles = xpath('//title', xmlDoc);
+  }
+
+  var duration = ( new Date() ).getTime() - start;
+
+  stats.xpath.push(duration);
   $('#stats').text(JSON.stringify(stats, null, 2));
+  $('#json').text(JSON.stringify(titles, null, 2));
+}
 
-  $('#load-button').on('click', function() {
-    $.get({
-      url: 'src/books.xml',
-      dataType: 'text'
+function searchByDom() {
+  var start = ( new Date() ).getTime(),
+    titles;
 
-    }, function(xmlString) {
-      $('#xml').text(xmlString);
-      // xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
-      xmlDoc = $.parseXML(xmlString);
-    });
-  });
+  for(var i=0; i<nTrials; i++) {
+    titles = getElement('title', xmlDoc);
+  }
 
-  $('#search-button-xpath').on('click', function() {
-    var start = ( new Date() ).getTime(),
-      titles;
+  var duration = ( new Date() ).getTime() - start;
 
-    for(var i=0; i<100000; i++) {
-      titles = xpath('//title', xmlDoc);
-    }
+  stats.element.push(duration);
+  $('#stats').text(JSON.stringify(stats, null, 2));
+  $('#json').text(JSON.stringify(titles, null, 2));
+}
 
-    var duration = ( new Date() ).getTime() - start;
+function searchByJQ() {
+  var start = ( new Date() ).getTime(),
+    titles;
 
-    stats.xpath.push(duration);
-    $('#stats').text(JSON.stringify(stats, null, 2));
-    $('#json').text(JSON.stringify(titles, null, 2));
-  });
+  for(var i=0; i<nTrials; i++) {
+    titles = getElementJQ('title', xmlDoc);
+  }
 
-  $('#search-button-dom').on('click', function() {
-    var start = ( new Date() ).getTime(),
-      titles;
+  var duration = ( new Date() ).getTime() - start;
 
-    for(var i=0; i<100000; i++) {
-      titles = getElement('title', xmlDoc);
-      // console.log(titles);
-    }
+  stats.jq.push(duration);
+  $('#stats').text(JSON.stringify(stats, null, 2));
+  $('#json').text(JSON.stringify(titles, null, 2));
+}
 
-    var duration = ( new Date() ).getTime() - start;
+function searchByJsonPath() {
+  var start = ( new Date() ).getTime(),
+    titles;
 
-    stats.element.push(duration);
-    $('#stats').text(JSON.stringify(stats, null, 2));
-    $('#json').text(JSON.stringify(titles, null, 2));
-  });
+  for(var i=0; i<nTrials; i++) {
+    titles = getElementJP('title', jsonDoc);
+  }
+ 
+  var duration = ( new Date() ).getTime() - start;
 
-  $('#search-button-jq').on('click', function() {
-    var start = ( new Date() ).getTime(),
-      titles;
+  stats.jsonpath.push(duration);
+  $('#stats').text(JSON.stringify(stats, null, 2));
+  $('#json').text(JSON.stringify(titles, null, 2));
+}
 
-    for(var i=0; i<100000; i++) {
-      titles = getElementJQ('title', xmlDoc);
-      // console.log(titles);
-    }
-
-    var duration = ( new Date() ).getTime() - start;
-
-    stats.jq.push(duration);
-    $('#stats').text(JSON.stringify(stats, null, 2));
-    $('#json').text(JSON.stringify(titles, null, 2));
-  });
-
+$(document).ready(function() {
+  $('#stats').text(JSON.stringify(stats, null, 2));
 });

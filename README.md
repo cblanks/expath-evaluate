@@ -2,116 +2,98 @@
 
 Experimenting with the browser's native xpath to process XML.
 
-A speed comparison over 100,000 trials with `xmlDoc.evaluate` xpath vs. `xmlDoc.getElementsByTagName` DOM element methods and jQuery equivalent selector `$(xmlDoc).find:
+Comparing parsing speed of a sample XML document with:
+
+- xpath, via `xmlDoc.evaluate()`
+- DOM selection, via `xmlDoc.getElementsByTagName()`
+- DOM selection, via jQuery `$(xmlDoc).find()`
+- jsonpath, on document converted using `xml-js`
+
+Speed comparisons over 100,000 trials:
 
 ## Google Chrome
-```
+
+```javascript
 {
   "xpath": [
-    4259,
-    3946,
-    4083,
-    3898,
-    4130
+    4060,
+    4213,
+    4186
   ],
   "element": [
-    2376,
-    2185,
-    2217,
-    2220,
-    2196
+    1997,
+    2128,
+    2051
   ],
   "jq": [
-    4971,
-    4666,
-    4718,
-    4310,
-    4382
+    4197,
+    4391,
+    4241
+  ],
+  "jsonpath": [
+    16591,
+    16836,
+    16552
   ]
 }
 ```
 
 ## Safari
-```
-{
-  "xpath": [
-    1811,
-    1650,
-    1655,
-    1649,
-    1631
-  ],
-  "element": [
-    981,
-    974,
-    974,
-    942,
-    955
-  ],
-  "jq": [
-    3078,
-    3016,
-    3010,
-    3021,
-    3053
-  ]
-}
-```
 
-## Opera
-```
+```javascript
 {
   "xpath": [
-    4125,
-    4082,
-    4188,
-    4038,
-    4305
+    2209,
+    3513,
+    2096
   ],
   "element": [
-    2035,
-    2013,
-    2009,
-    2043,
-    2052
+    1201,
+    1573,
+    1256
   ],
   "jq": [
-    4667,
-    4371,
-    4356,
-    4324,
-    4504
+    3253,
+    3777,
+    2827
+  ],
+  "jsonpath": [
+    19017,
+    18748,
+    17134
   ]
 }
 ```
 
 ## Firefox
-```
+
+```javascript
 {
   "xpath": [
-    3830,
-    4150,
-    3874,
-    3786,
-    3768,
-    3980
+    3068,
+    4054,
+    3005
   ],
   "element": [
-    1707,
-    1716,
-    1712,
-    1650,
-    1885
+    1495,
+    1513,
+    1529
   ],
   "jq": [
-    4315,
-    4648,
-    4715,
-    4107,
-    3881
+    19445,
+    4570,
+    2846
+  ],
+  "jsonpath": [
+    15455,
+    14322,
+    14226
   ]
 }
 ```
 
-The DOM method is almost twice as fast as xpath! Not what I expected.
-Also more than twice as fast as jQuery.
+### Conclusions
+
+- The DOM method is almost twice as fast as xpath! Not what I expected.
+- Also more than twice as fast as jQuery.
+- JSONPATH is really, really, really slow.  Large amounts of data should be requested as XML if available. 

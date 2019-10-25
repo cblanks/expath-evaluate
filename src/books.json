@@ -1,0 +1,106 @@
+{
+  "_declaration": {
+    "_attributes": {
+      "version": "1.0",
+      "encoding": "UTF-8"
+    }
+  },
+  "bookstore": {
+    "book": [
+      {
+        "_attributes": {
+          "category": "cooking"
+        },
+        "title": {
+          "_attributes": {
+            "lang": "en"
+          },
+          "_text": "Everyday Italian"
+        },
+        "author": {
+          "_text": "Giada De Laurentiis"
+        },
+        "year": {
+          "_text": "2005"
+        },
+        "price": {
+          "_text": "30.00"
+        }
+      },
+      {
+        "_attributes": {
+          "category": "children"
+        },
+        "title": {
+          "_attributes": {
+            "lang": "en"
+          },
+          "_text": "Harry Potter"
+        },
+        "author": {
+          "_text": "J K. Rowling"
+        },
+        "year": {
+          "_text": "2005"
+        },
+        "price": {
+          "_text": "29.99"
+        }
+      },
+      {
+        "_attributes": {
+          "category": "web"
+        },
+        "title": {
+          "_attributes": {
+            "lang": "en"
+          },
+          "_text": "XQuery Kick Start"
+        },
+        "author": [
+          {
+            "_text": "James McGovern"
+          },
+          {
+            "_text": "Per Bothner"
+          },
+          {
+            "_text": "Kurt Cagle"
+          },
+          {
+            "_text": "James Linn"
+          },
+          {
+            "_text": "Vaidyanathan Nagarajan"
+          }
+        ],
+        "year": {
+          "_text": "2003"
+        },
+        "price": {
+          "_text": "49.99"
+        }
+      },
+      {
+        "_attributes": {
+          "category": "web"
+        },
+        "title": {
+          "_attributes": {
+            "lang": "en"
+          },
+          "_text": "Learning XML"
+        },
+        "author": {
+          "_text": "Erik T. Ray"
+        },
+        "year": {
+          "_text": "2003"
+        },
+        "price": {
+          "_text": "39.95"
+        }
+      }
+    ]
+  }
+}

@@ -2,26 +2,57 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Native XPATH</title>
+  <meta charset="UTF-8">
+  <title>XML speed tests</title>
 
-    <script src="node_modules/jquery/dist/jquery.js"></script>
-    <script src="src/script.js"></script>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 
-    <!-- <link rel="stylesheet" href="index.css"> -->
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/jsonpath/jsonpath.min.js"></script>
+  <script src="src/script.js"></script>
 </head>
 
 <body>
+  <div class="container">
     <h1>Search over XML</h1>
 
-    <button id="load-button">Load XML</button>
-    <button id="search-button-xpath">Search with xpath</button>
-    <button id="search-button-dom">Search with DOM methods</button>
-    <button id="search-button-jq">Search with jQuery</button>
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary" onclick="loadXml()">Load XML</button>
+        <button class="btn btn-secondary" onclick="searchByXPath()">Search with xpath</button>
+        <button class="btn btn-secondary" onclick="searchByDom()">Search with DOM methods</button>
+        <button class="btn btn-secondary" onclick="searchByJQ()">Search with jQuery</button>
+      </div>
+    </div>
 
-    <pre id="stats"></pre>
-    <pre id="json"></pre>
-    <pre id="xml"></pre>
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-primary" onclick="loadJson()">Load JSON</button>
+        <button class="btn btn-secondary" onclick="searchByJsonPath()">Search with jsonpath</button>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <pre id="stats"></pre>
+      </div>
+      <div class="col">
+          <textarea id="json" class="w-100 h-100"></textarea>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <textarea id="data" class="w-100" style="min-height:200px"></textarea>
+      </div>
+    </div>
 
 </body>
 
