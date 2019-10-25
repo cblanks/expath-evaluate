@@ -140,8 +140,8 @@ function loadXml() {
 
   }, xmlString => {
     $('#data').text(xmlString);
-    // xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
-    xmlDoc = $.parseXML(xmlString);
+    xmlDoc = (new DOMParser()).parseFromString(xmlString, "text/xml");
+    // xmlDoc = $.parseXML(xmlString);
   });
 }
 
