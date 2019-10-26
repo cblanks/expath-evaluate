@@ -2,16 +2,19 @@
 
 Experimenting with the browser's native xpath to process XML.
 
-Comparing parsing speed of a sample XML document with:
+## Query speed comparisons
+
+Comparing query speed of a sample XML document with:
 
 - xpath, via `xmlDoc.evaluate()`
 - DOM selection, via `xmlDoc.getElementsByTagName()`
 - DOM selection, via jQuery `$(xmlDoc).find()`
 - jsonpath, on document converted using `xml-js`
+- operating directly on the JSON onbject knowing the explicit structure
 
-Speed comparisons over 100,000 trials:
+Over 100,000 trials:
 
-## Google Chrome
+### Google Chrome
 
 ```javascript
 {
@@ -34,11 +37,16 @@ Speed comparisons over 100,000 trials:
     16591,
     16836,
     16552
+  ],
+  "json": [
+    205,
+    188,
+    177
   ]
 }
 ```
 
-## Safari
+### Safari
 
 ```javascript
 {
@@ -61,11 +69,16 @@ Speed comparisons over 100,000 trials:
     19017,
     18748,
     17134
+  ],
+  "json": [
+    546,
+    247,
+    307
   ]
 }
 ```
 
-## Firefox
+### Firefox
 
 ```javascript
 {
@@ -88,6 +101,11 @@ Speed comparisons over 100,000 trials:
     15455,
     14322,
     14226
+  ],
+  "json": [
+    292,
+    265,
+    271
   ]
 }
 ```
@@ -97,3 +115,85 @@ Speed comparisons over 100,000 trials:
 - The DOM method is almost twice as fast as xpath! Not what I expected.
 - Also more than twice as fast as jQuery.
 - JSONPATH is really, really, really slow.  Large amounts of data should be requested as XML if available. 
+- *If* you know the structure, it's faster to request JSON and grab the content directly.
+
+## Data parsing speed comparisons
+
+Comparing parsing speed of a sample XML document with:
+
+- `DOMParser.parseFromString()`
+- jQuery `$.parseXML()`
+- `JSON.parse()`
+
+Over 100 trials:
+
+### Google Chrome
+
+```javascript
+{
+  "xmlDOM": [
+    495,
+    504,
+    418
+  ],
+  "xmlJQ": [
+    474,
+    456,
+    424
+  ],
+  "jsonObj": [
+    53,
+    46,
+    46
+  ]
+}
+```
+
+### Safari
+
+```javascript
+{
+  "xmlDOM": [
+    536,
+    543,
+    724
+  ],
+  "xmlJQ": [
+    489,
+    434,
+    441
+  ],
+  "jsonObj": [
+    42,
+    38,
+    47
+  ]
+}
+```
+
+### Firefox
+
+```javascript
+{
+  "xmlDOM": [
+    897,
+    569,
+    783
+  ],
+  "xmlJQ": [
+    561,
+    573,
+    549
+  ],
+  "jsonObj": [
+    65,
+    57,
+    47
+  ]
+}
+```
+
+### Conclusions
+
+- JSON is approx. twice as fast to parse as XML.
+- Parsing with DOMParser or jQuery is similar in Chrome.  A bit faster with jQuery surprisingly on Firefox and Safari.
